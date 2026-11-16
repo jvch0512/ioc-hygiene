@@ -1,0 +1,4 @@
+# Blocklist 2026-11-16
+hxxp://bad[.]example/login
+203[.]0[.]114[.]50
+44d88612fea8a8f36de82e1278abb02f

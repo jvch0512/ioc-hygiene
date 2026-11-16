@@ -1,0 +1,27 @@
+3 files, 13 findings
+HIGH     IOC001 reports/campaign-2026-11.md:4
+         live URL http://cdn.evil-host.example/drop/payload.exe should be defanged, for example hxxp://cdn[.]evil-host[.]example/drop/payload.exe
+MEDIUM   IOC002 reports/campaign-2026-11.md:8
+         live IP address 203.0.114.9 should be defanged, for example 203[.]0[.]114[.]9
+MEDIUM   IOC002 reports/campaign-2026-11.md:9
+         live IP address 198.18.5.77 should be defanged, for example 198[.]18[.]5[.]77
+MEDIUM   IOC007 reports/campaign-2026-11.md:13
+         8.8.8.8 is a well-known public service, check this is really an indicator
+MEDIUM   IOC007 reports/campaign-2026-11.md:15
+         d41d8cd98f00b204e9800998ecf8427e is the hash of an empty file, not an indicator
+MEDIUM   IOC002 reports/campaign-2026-11.md:17
+         live IP address 203.0.114.9 should be defanged, for example 203[.]0[.]114[.]9
+LOW      IOC003 reports/campaign-2026-11.md:3
+         live email address billing@invoice-portal.example should be defanged, for example billing[@]invoice-portal.example
+LOW      IOC006 reports/campaign-2026-11.md:11
+         billing@invoice-portal.example is already listed at reports/campaign-2026-11.md:3
+LOW      IOC004 reports/campaign-2026-11.md:12
+         10.20.30.40 is a private or reserved address, unlikely to be an indicator
+LOW      IOC005 reports/campaign-2026-11.md:14
+         labelled sha256 but the value has 40 hex digits, expected 64
+LOW      IOC006 reports/campaign-2026-11.md:17
+         203.0.114.9 is already listed at reports/campaign-2026-11.md:8
+LOW      IOC008 reports/campaign-2026-11.md:18
+         300.1.1.1 is not a valid IPv4 address
+INFO     IOC000 reports/notes.txt
+         no indicators found

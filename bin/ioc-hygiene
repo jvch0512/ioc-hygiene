@@ -1,0 +1,42 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use FindBin qw($Bin);
+use lib "$Bin/../src";
+use IocHygiene qw(audit_path rank);
+
+my $usage = "usage: ioc-hygiene PATH [--tsv] [--fail-on medium|high|critical]\nExit: 0 ok, 1 findings at or above --fail-on, 2 bad input.\n";
+my ($path, $tsv, $fail_on);
+my @a = @ARGV;
+while (@a) {
+    my $x = shift @a;
+    if ($x eq '--tsv') { $tsv = 1 }
+    elsif ($x eq '--fail-on') {
+        my $v = shift @a;
+        if (!defined $v || $v !~ /^(?:medium|high|critical)$/) { print STDERR $usage; exit 2 }
+        $fail_on = $v;
+    }
+    elsif ($x =~ /^-./) { print STDERR $usage; exit 2 }
+    elsif (defined $path) { print STDERR $usage; exit 2 }
+    else { $path = $x }
+}
+if (!defined $path) { print STDERR $usage; exit 2 }
+if (!-e $path) { print STDERR "error: no such file or directory: $path\n"; exit 2 }
+my $p = $path;
+$p =~ s{/+$}{} if length($p) > 1;
+$p = '/' if $p eq '';
+my ($findings, $n) = audit_path($p);
+my $head = "$n files, " . scalar(@$findings) . " findings";
+my @out = ($tsv ? "# $head" : $head);
+for my $f (@$findings) {
+    if ($tsv) { push @out, join("\t", $f->{sev}, $f->{rule}, $f->{where}, $f->{msg}) }
+    else {
+        push @out, sprintf('%-8s %s %s', uc $f->{sev}, $f->{rule}, $f->{where});
+        push @out, "         $f->{msg}";
+    }
+}
+print join("\n", @out), "\n";
+if ($fail_on) {
+    for my $f (@$findings) { exit 1 if rank($f->{sev}) <= rank($fail_on) }
+}
+exit 0;
