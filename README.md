@@ -2,6 +2,8 @@
 
 ioc-hygiene reads text, Markdown, CSV and JSON files that contain indicators of compromise and checks the list itself: URLs, IPv4 addresses and email addresses that are published live instead of defanged, private or reserved addresses listed as indicators, well-known benign indicators such as public DNS resolvers and the hashes of empty files, hash labels that do not match the hash length, invalid IPv4 addresses and indicators listed more than once. It is a pre-publication gate for reports and blocklists.
 
+![Terminal demo of ioc-hygiene on its sample data](docs/demo.svg)
+
 **Live demo:** https://jvch0512.github.io/ioc-hygiene/ (Synthetic data.)
 
 Perl 5 core modules only. The demo page is rendered from the tool's `--tsv` output by `scripts/site.py` (Python 3, only needed to regenerate the page).
@@ -49,3 +51,13 @@ make test    # A Test::More suite: every rule, defanging forms, reference sectio
 ```
 
 MIT.
+
+## Code scanning (SARIF)
+
+`scripts/tsv2sarif.py` converts the `--tsv` output into SARIF 2.1.0, so findings show up in GitHub code scanning:
+
+```sh
+bin/ioc-hygiene examples --tsv | python3 scripts/tsv2sarif.py --tool ioc-hygiene --prefix examples > results.sarif
+```
+
+Upload `results.sarif` with `github/codeql-action/upload-sarif`. Severities map to SARIF levels (critical and high to error, medium to warning, low and info to note) and to a `security-severity` score.
